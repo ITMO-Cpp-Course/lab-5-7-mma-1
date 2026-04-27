@@ -1,8 +1,9 @@
 #pragma once
-#include <string>
 #include <cstdint>
+#include <string>
 
-struct Document {
+struct Document
+{
     uint64_t id;
     std::string name;
     std::string content;
