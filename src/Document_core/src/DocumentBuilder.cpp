@@ -1,5 +1,5 @@
-#include "InvertedIndex.hpp"
 #include "DocumentBuilder.hpp"
+#include "InvertedIndex.hpp"
 #include <utility>
 #include <vector>
 void InvertedIndex::add_document(Document doc)

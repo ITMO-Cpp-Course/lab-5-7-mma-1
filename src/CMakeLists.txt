@@ -14,7 +14,7 @@ target_link_libraries(resource_core PRIVATE project_warnings)
 # Подключаем санитайзеры памяти, если они существуют
 if (TARGET project_sanitizers)
     target_link_libraries(resource_core PRIVATE project_sanitizers)
-endif()
+endif ()
 
 # Собираем консольное приложение (файл main.cpp)
 add_executable(Document_cli
@@ -25,4 +25,4 @@ add_executable(Document_cli
 target_link_libraries(Document_cli PRIVATE resource_core project_warnings)
 if (TARGET project_sanitizers)
     target_link_libraries(Document_cli PRIVATE project_sanitizers)
-endif()
+endif ()

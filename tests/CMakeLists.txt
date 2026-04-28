@@ -13,7 +13,7 @@ add_executable(resource_tests
 
 target_link_libraries(resource_tests PRIVATE resource_core project_warnings Catch2::Catch2WithMain)
 if (TARGET project_sanitizers)
-        target_link_libraries(resource_tests PRIVATE project_sanitizers)
+    target_link_libraries(resource_tests PRIVATE project_sanitizers)
 endif ()
 
 add_test(NAME resource_tests COMMAND resource_tests)
