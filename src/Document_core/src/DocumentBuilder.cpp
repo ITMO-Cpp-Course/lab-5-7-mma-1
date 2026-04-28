@@ -1,34 +1,37 @@
+#include "InvertedIndex.hpp"
 #include "DocumentBuilder.hpp"
-#include <cctype>
-
-Document DocumentBuilder::build(uint64_t id, std::string name, std::string text)
+#include <utility>
+#include <vector>
+void InvertedIndex::add_document(Document doc)
 {
+    uint64_t id = doc.id;
 
-    return {id, std::move(name), std::move(text)};
+    auto words = DocumentBuilder::tokenize(doc.content);
+
+    for (const auto& word : words)
+    {
+        index_[word][id]++;
+    }
+
+    docs_.emplace(id, std::move(doc));
 }
 
-std::vector<std::string> DocumentBuilder::tokenize(std::string_view text)
+std::map<uint64_t, size_t> InvertedIndex::search(std::string_view query) const
 {
-    std::vector<std::string> words;
-    std::string current;
+    auto tokens = DocumentBuilder::tokenize(query);
 
-    for (char c : text)
+    if (tokens.empty())
     {
-        if (std::isalpha(static_cast<unsigned char>(c)))
-        {
-            current += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-        }
-        else if (!current.empty())
-        {
-            words.push_back(current);
-            current.clear();
-        }
+        return {};
     }
 
-    if (!current.empty())
+    std::string word = tokens[0];
+
+    auto it = index_.find(word);
+    if (it != index_.end())
     {
-        words.push_back(current);
+        return it->second;
     }
 
-    return words;
+    return {};
 }
