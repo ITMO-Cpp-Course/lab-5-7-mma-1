@@ -1,10 +1,11 @@
 #pragma once
-#include <cstdint>
-#include <string>
+#include "Document.hpp"
+#include <vector>
+#include <string_view>
 
-struct Document
-{
-    uint64_t id;
-    std::string name;
-    std::string content;
+class DocumentBuilder {
+public:
+    static Document build(uint64_t id, std::string name, std::string text);
+
+    static std::vector<std::string> tokenize(std::string_view text);
 };

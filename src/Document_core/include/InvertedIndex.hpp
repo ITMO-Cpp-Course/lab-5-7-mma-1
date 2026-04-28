@@ -1,7 +1,7 @@
 #pragma once
-#include "Document.hpp"
+#include <Document.hpp>
 #include <map>
-#include <string_view>.
+#include <string_view>
 #include <unordered_map>
 
 class InvertedIndex

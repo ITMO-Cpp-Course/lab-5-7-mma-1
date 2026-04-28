@@ -1,7 +1,34 @@
-#include "DocumentBuilder.hpp"
-#include "InvertedIndex.hpp"
+#include <DocumentBuilder.hpp>
+#include <InvertedIndex.hpp>
 #include <utility>
 #include <vector>
+#include <sstream>
+#include <algorithm>
+#include <cctype>
+
+std::vector<std::string> DocumentBuilder::tokenize(std::string_view text) {
+    std::vector<std::string> words;
+    std::string current_word;
+
+    for (char c : text) {
+        if (std::isalnum(static_cast<unsigned char>(c))) {
+            current_word += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+        }
+        else {
+            if (!current_word.empty()) {
+                words.push_back(current_word);
+                current_word.clear();
+            }
+        }
+    }
+
+    if (!current_word.empty()) {
+        words.push_back(current_word);
+    }
+
+    return words;
+}
+
 void InvertedIndex::add_document(Document doc)
 {
     uint64_t id = doc.id;

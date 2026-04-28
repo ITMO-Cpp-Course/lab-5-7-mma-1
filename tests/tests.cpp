@@ -1,7 +1,7 @@
 
 #include "Document.hpp"
-#include "DocumentBuilder.hpp"
-#include "InvertedIndex.hpp"
+#include <DocumentBuilder.hpp>
+#include <InvertedIndex.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 // ============================================
