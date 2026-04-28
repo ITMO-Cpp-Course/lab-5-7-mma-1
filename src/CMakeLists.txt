@@ -8,4 +8,4 @@ target_link_libraries(resource_core PUBLIC project_warnings)
 
 if (NOT WIN32)
     target_link_libraries(resource_core PRIVATE project_sanitizers)
-endif()
+endif ()

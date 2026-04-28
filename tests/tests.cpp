@@ -4,9 +4,6 @@
 #include <InvertedIndex.hpp>
 #include <catch2/catch_test_macros.hpp>
 
-// ============================================
-// Тесты для DocumentBuilder
-// ============================================
 TEST_CASE("DocumentBuilder::tokenize works correctly", "[DocumentBuilder]")
 {
     SECTION("Empty string returns empty vector")
@@ -39,9 +36,6 @@ TEST_CASE("DocumentBuilder::tokenize works correctly", "[DocumentBuilder]")
     }
 }
 
-// ============================================
-// Тесты для InvertedIndex
-// ============================================
 TEST_CASE("InvertedIndex basic functionality", "[InvertedIndex]")
 {
     InvertedIndex index;
