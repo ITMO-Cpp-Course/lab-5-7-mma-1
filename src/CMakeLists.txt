@@ -1,6 +1,7 @@
 add_library(resource_core
         Document_core/src/DocumentBuilder.cpp
         Document_core/src/InvertedIndex.cpp
+        Document_core/src/Document.cpp
 )
 
 target_include_directories(resource_core PUBLIC Document_core/include)
