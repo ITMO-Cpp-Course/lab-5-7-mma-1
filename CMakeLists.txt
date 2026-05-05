@@ -11,7 +11,7 @@ if (MSVC)
 else ()
     target_compile_options(project_warnings INTERFACE -Wall -Wextra -Wpedantic -Werror)
 endif ()
-
+add_library(project_sanitizers INTERFACE)
 if (NOT WIN32)
     add_library(project_sanitizers INTERFACE)
     target_compile_options(project_sanitizers INTERFACE $<$<CONFIG:Debug>:-fsanitize=address>)

@@ -31,4 +31,3 @@ std::vector<std::string> DocumentBuilder::tokenize(std::string_view text)
 
     return words;
 }
-
