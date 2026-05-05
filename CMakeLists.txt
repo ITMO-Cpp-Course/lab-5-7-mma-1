@@ -11,9 +11,12 @@ if (MSVC)
 else ()
     target_compile_options(project_warnings INTERFACE -Wall -Wextra -Wpedantic -Werror)
 endif ()
+
+option(ENABLE_SANITIZERS "Enable ASan for debug builds" ON)
+
 add_library(project_sanitizers INTERFACE)
-if (NOT WIN32)
-    add_library(project_sanitizers INTERFACE)
+
+if (ENABLE_SANITIZERS AND NOT WIN32)
     target_compile_options(project_sanitizers INTERFACE $<$<CONFIG:Debug>:-fsanitize=address>)
     target_link_options(project_sanitizers INTERFACE $<$<CONFIG:Debug>:-fsanitize=address>)
 endif ()
