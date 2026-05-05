@@ -1,15 +1,20 @@
 #pragma once
-#include <Document.hpp>
+#include "Document.hpp"
 #include <map>
 #include <string_view>
 #include <unordered_map>
+#include <unordered_set>
 
 class InvertedIndex
 {
   public:
     void add_document(Document doc);
 
-    std::map<uint64_t, size_t> search(std::string_view query) const;
+    void remove_document(uint64_t id);
+
+    std::unordered_set<uint64_t> find_document(std::string_view query) const;
+
+    size_t get_word_count_in_document(std::string_view word, uint64_t doc_id) const;
 
   private:
     std::unordered_map<uint64_t, Document> docs_;
