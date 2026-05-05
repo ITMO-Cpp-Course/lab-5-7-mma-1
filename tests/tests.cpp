@@ -1,4 +1,3 @@
-
 #include "Document.hpp"
 #include <DocumentBuilder.hpp>
 #include <InvertedIndex.hpp>
