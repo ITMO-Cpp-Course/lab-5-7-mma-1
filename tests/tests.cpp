@@ -65,7 +65,7 @@ TEST_CASE("InvertedIndex basic functionality", "[InvertedIndex]")
 
         auto result = index.search("hello");
         REQUIRE(result.size() == 1);
-        REQUIRE(result[1] == 1); // Документ 1, совпадение 1 раз
+        REQUIRE(result[1] == 1);
     }
 
     SECTION("Word appears multiple times in the same document")
@@ -74,7 +74,7 @@ TEST_CASE("InvertedIndex basic functionality", "[InvertedIndex]")
 
         auto result = index.search("apple");
         REQUIRE(result.size() == 1);
-        REQUIRE(result[2] == 3); // Документ 2, совпадение 3 раза
+        REQUIRE(result[2] == 3);
     }
 
     SECTION("Word appears in multiple different documents")
@@ -85,9 +85,9 @@ TEST_CASE("InvertedIndex basic functionality", "[InvertedIndex]")
 
         auto result = index.search("hello");
         REQUIRE(result.size() == 2);
-        REQUIRE(result[1] == 1);                 // В Doc1 один раз
-        REQUIRE(result[2] == 1);                 // В Doc2 один раз
-        REQUIRE(result.find(3) == result.end()); // В Doc3 этого слова нет
+        REQUIRE(result[1] == 1);
+        REQUIRE(result[2] == 1);
+        REQUIRE(result.find(3) == result.end());
     }
 
     SECTION("Multiple documents with multiple word occurrences")
@@ -97,7 +97,7 @@ TEST_CASE("InvertedIndex basic functionality", "[InvertedIndex]")
 
         auto result = index.search("test");
         REQUIRE(result.size() == 2);
-        REQUIRE(result[1] == 3); // В Doc1 - 3 раза
-        REQUIRE(result[2] == 2); // В Doc2 - 2 раза
+        REQUIRE(result[1] == 3);
+        REQUIRE(result[2] == 2);
     }
 }
