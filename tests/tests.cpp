@@ -1,7 +1,9 @@
 #include "Document.hpp"
-#include <DocumentBuilder.hpp>
-#include <InvertedIndex.hpp>
-#include <catch2/catch_test_macros.hpp>
+#include "DocumentBuilder.hpp"
+#include "InvertedIndex.hpp"
+#include "catch2/catch_test_macros.hpp"
+#include "../src/TransactionCore/include/Error.hpp"
+#include "../src/TransactionCore/include/IndexStore.hpp"
 
 TEST_CASE("DocumentBuilder::tokenize works correctly", "[DocumentBuilder]")
 {
@@ -140,4 +142,111 @@ TEST_CASE("InvertedIndex basic functionality", "[InvertedIndex]")
         REQUIRE(result.empty());
         REQUIRE(index.get_word_count_in_document("apple", 1) == 0);
     }
+}
+
+TEST_CASE("ErrorCode to string conversion", "[Error]") {
+    REQUIRE(errorCodeToString(ErrorCode::Success) == "Success");
+    REQUIRE(errorCodeToString(ErrorCode::InvalidDocumentId) == "Invalid document ID (must be > 0)");
+    REQUIRE(errorCodeToString(ErrorCode::EmptySearchQuery) == "Empty search query");
+    REQUIRE(errorCodeToString(ErrorCode::DocumentNotFound) == "Document not found");
+    REQUIRE(errorCodeToString(ErrorCode::DuplicateDocumentId) == "Document with this ID already exists");
+    REQUIRE(errorCodeToString(ErrorCode::TransactionNotActive) == "No active transaction");
+}
+
+TEST_CASE("Format error with context", "[Error]") {
+    std::string msg = formatError(ErrorCode::DocumentNotFound, "doc_id=42");
+    REQUIRE(msg.find("Document not found") != std::string::npos);
+    REQUIRE(msg.find("doc_id=42") != std::string::npos);
+}
+
+TEST_CASE("Add document error handling", "[IndexStore]") {
+    IndexStore store;
+
+    SECTION("Invalid document ID") {
+        Document invalidDoc(0, "Invalid", "Content");
+        auto res = store.addDocument(invalidDoc);
+        REQUIRE_FALSE(res.has_value());
+        REQUIRE(res.error() == ErrorCode::InvalidDocumentId);
+    }
+
+    SECTION("Valid document") {
+        Document validDoc(1, "Valid", "Content");
+        auto res = store.addDocument(validDoc);
+        REQUIRE(res.has_value());
+        REQUIRE(res.value() == true);
+    }
+
+    SECTION("Duplicate document ID") {
+        store.addDocument(Document(1, "First", "Content"));
+        Document duplicateDoc(1, "Duplicate", "Other");
+        auto res = store.addDocument(duplicateDoc);
+        REQUIRE_FALSE(res.has_value());
+        REQUIRE(res.error() == ErrorCode::DuplicateDocumentId);
+    }
+}
+
+TEST_CASE("Remove document error handling", "[IndexStore]") {
+    IndexStore store;
+    store.addDocument(Document(1, "Test", "Content"));
+
+    SECTION("Invalid ID") {
+        auto res = store.removeDocument(0);
+        REQUIRE_FALSE(res.has_value());
+        REQUIRE(res.error() == ErrorCode::InvalidDocumentId);
+    }
+
+    SECTION("Document not found") {
+        auto res = store.removeDocument(999);
+        REQUIRE_FALSE(res.has_value());
+        REQUIRE(res.error() == ErrorCode::DocumentNotFound);
+    }
+
+    SECTION("Successful removal") {
+        auto res = store.removeDocument(1);
+        REQUIRE(res.has_value());
+        REQUIRE(res.value() == true);
+    }
+}
+
+TEST_CASE("Search error handling", "[IndexStore]") {
+    IndexStore store;
+    store.addDocument(Document(1, "Hello", "Hello world"));
+
+    SECTION("Empty query") {
+        auto res = store.search("");
+        REQUIRE_FALSE(res.has_value());
+        REQUIRE(res.error() == ErrorCode::EmptySearchQuery);
+    }
+
+    SECTION("Successful search") {
+        auto res = store.search("Hello");
+        REQUIRE(res.has_value());
+        REQUIRE(res.value().size() == 1);
+        REQUIRE(res.value().count(1) == 1);
+    }
+}
+
+TEST_CASE("Get document count", "[IndexStore]") {
+    IndexStore store;
+    REQUIRE(store.getDocumentCount() == 0);
+
+    store.addDocument(Document(1, "Doc1", "Content1"));
+    REQUIRE(store.getDocumentCount() == 1);
+
+    store.addDocument(Document(2, "Doc2", "Content2"));
+    REQUIRE(store.getDocumentCount() == 2);
+
+    store.removeDocument(1);
+    REQUIRE(store.getDocumentCount() == 1);
+}
+
+TEST_CASE("Has document", "[IndexStore]") {
+    IndexStore store;
+    REQUIRE_FALSE(store.hasDocument(1));
+
+    store.addDocument(Document(1, "Doc1", "Content"));
+    REQUIRE(store.hasDocument(1));
+
+    store.removeDocument(1);
+    REQUIRE_FALSE(store.hasDocument(1));
 }

@@ -1,6 +1,6 @@
 #include "InvertedIndex.hpp"
 #include "DocumentBuilder.hpp"
-#include <utility>
+#include "utility"
 
 void InvertedIndex::add_document(Document doc)
 {
