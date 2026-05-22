@@ -1,8 +1,26 @@
-//
-// Created by Максим Матвеев on 22.05.2026.
-//
+#pragma once
 
-#ifndef LAB4_ERROR_HPP
-#define LAB4_ERROR_HPP
+#include "Error.hpp"
+#include "../../Document_core/include/InvertedIndex.hpp"
+#include <unordered_set>
 
-#endif // LAB4_ERROR_HPP
+namespace transaction {
+
+    class IndexStore {
+    public:
+        Result<bool, ErrorCode> addDocument(const Document& doc);
+        Result<bool, ErrorCode> removeDocument(uint64_t id);
+        Result<std::unordered_set<uint64_t>, ErrorCode> search(const std::string& query);
+
+        class UpdateTransaction;
+        UpdateTransaction beginTransaction();
+
+        size_t getDocumentCount() const;
+        bool hasDocument(uint64_t id) const;
+
+    private:
+        InvertedIndex index_;
+        friend class UpdateTransaction;
+    };
+
+}
