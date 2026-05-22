@@ -1,26 +1,32 @@
 #pragma once
 
-#include "Error.hpp"
-#include "../../Document_core/include/InvertedIndex.hpp"
-#include <unordered_set>
+#include "IndexStore.hpp"
+#include "unordered_map"
 
 namespace transaction {
 
-class IndexStore {
+class IndexStore::UpdateTransaction {
 public:
+    explicit UpdateTransaction(IndexStore& store);
+    ~UpdateTransaction();
+
     Result<bool, ErrorCode> addDocument(const Document& doc);
     Result<bool, ErrorCode> removeDocument(uint64_t id);
-    Result<std::unordered_set<uint64_t>, ErrorCode> search(const std::string& query);
+    Result<bool, ErrorCode> commit();
 
-    class UpdateTransaction;
-    UpdateTransaction beginTransaction();
+    UpdateTransaction(const UpdateTransaction&) = delete;
+    UpdateTransaction& operator=(const UpdateTransaction&) = delete;
 
-    size_t getDocumentCount() const;
-    bool hasDocument(uint64_t id) const;
+    UpdateTransaction(UpdateTransaction&& other) noexcept;
+    UpdateTransaction& operator=(UpdateTransaction&& other) noexcept;
 
 private:
-    InvertedIndex index_;
-    friend class UpdateTransaction;
+    IndexStore& store_;
+    InvertedIndex snapshot_;
+    bool isActive_;
+    bool isCommitted_;
+
+    void rollback();
 };
 
 }

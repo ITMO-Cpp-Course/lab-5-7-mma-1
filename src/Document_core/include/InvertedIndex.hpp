@@ -1,9 +1,9 @@
 #pragma once
 #include "Document.hpp"
-#include <map>
-#include <string_view>
-#include <unordered_map>
-#include <unordered_set>
+#include "map"
+#include "string_view"
+#include "unordered_map"
+#include "unordered_set"
 
 class InvertedIndex
 {
