@@ -1,32 +1,54 @@
 #pragma once
 
-#include "IndexStore.hpp"
-#include "unordered_map"
+#include "Error.hpp"
+#include "InvertedIndex.hpp"
+#include "Document.hpp"
+#include <unordered_set>
+#include <string_view>
+#include <cstdint>
 
-namespace transaction {
+namespace transaction
+{
+    class IndexStore
+    {
+    public:
+        Result<bool> add_document(const Document&);
+        Result<bool> remove_document(uint64_t id);
+        Result<std::unordered_set<uint64_t>> find_document(std::string_view query) const;
+        Result<size_t> get_word_count_in_document(std::string_view word, uint64_t doc_id) const;
 
-class IndexStore::UpdateTransaction {
-public:
-    explicit UpdateTransaction(IndexStore& store);
-    ~UpdateTransaction();
+        size_t getDocumentCount() const;
+        bool hasDocument(uint64_t id) const;
 
-    Result<bool, ErrorCode> addDocument(const Document& doc);
-    Result<bool, ErrorCode> removeDocument(uint64_t id);
-    Result<bool, ErrorCode> commit();
+        class UpdateTransaction
+        {
+        public:
+            ~UpdateTransaction();
+            UpdateTransaction(UpdateTransaction&& other) noexcept;
+            Result<void> add_document(Document doc);
+            Result<void> remove_document(uint64_t id);
+            Result<void> commit();
 
-    UpdateTransaction(const UpdateTransaction&) = delete;
-    UpdateTransaction& operator=(const UpdateTransaction&) = delete;
+        private:
+            friend class IndexStore;
+            explicit UpdateTransaction(IndexStore& store) noexcept;
+            IndexStore* store_;
+            bool committed_ = false;
+        };
 
-    UpdateTransaction(UpdateTransaction&& other) noexcept;
-    UpdateTransaction& operator=(UpdateTransaction&& other) noexcept;
+        UpdateTransaction beginTransaction();
 
-private:
-    IndexStore& store_;
-    InvertedIndex snapshot_;
-    bool isActive_;
-    bool isCommitted_;
+    private:
+        InvertedIndex main_index_;
 
-    void rollback();
-};
+        // методы поддержки транзакций
+        Result<void> addInTransaction(Document doc);
+        Result<void> removeInTransaction(uint64_t id);
+        Result<void> commitTransaction();
+        void rollbackTransaction();
 
+        std::unordered_map<uint64_t, Document> addedInTransaction_;
+        std::unordered_set<uint64_t> removedInTransaction_;
+        bool inTransaction_ = false;
+    };
 }
