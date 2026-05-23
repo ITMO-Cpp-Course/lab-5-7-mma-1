@@ -1,16 +1,16 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
+#include "cstdint"
+#include "string"
 
 class Document
 {
-  private:
+private:
     uint64_t id_;
     std::string name_;
     std::string content_;
 
-  public:
+public:
     Document(uint64_t id, std::string name, std::string content);
 
     uint64_t get_id() const;
