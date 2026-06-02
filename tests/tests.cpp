@@ -1,7 +1,7 @@
-#include "Error.hpp"
-#include "IndexStore.hpp"
 #include "Document.hpp"
 #include "DocumentBuilder.hpp"
+#include "Error.hpp"
+#include "IndexStore.hpp"
 #include "InvertedIndex.hpp"
 #include "catch2/catch_test_macros.hpp"
 
