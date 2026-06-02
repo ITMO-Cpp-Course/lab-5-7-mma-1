@@ -3,6 +3,8 @@
 #include "Document.hpp"
 #include <string_view>
 #include <vector>
+#include <cstdint>
+#include <string>
 
 class DocumentBuilder
 {

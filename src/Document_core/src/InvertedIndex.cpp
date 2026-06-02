@@ -101,3 +101,11 @@ size_t InvertedIndex::get_word_count_in_document(std::string_view word, uint64_t
 
     return doc_it->second;
 }
+bool InvertedIndex::contains(uint64_t id) const
+{
+    return docs_.contains(id);
+}
+size_t InvertedIndex::size() const
+{
+    return docs_.size();
+}
