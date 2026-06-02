@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Document.hpp"
-#include <string_view>
-#include <vector>
 #include <cstdint>
 #include <string>
+#include <string_view>
+#include <vector>
 
 class DocumentBuilder
 {

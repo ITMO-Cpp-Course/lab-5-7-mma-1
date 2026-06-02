@@ -1,9 +1,9 @@
+#include "../src/TransactionCore/include/Error.hpp"
+#include "../src/TransactionCore/include/IndexStore.hpp"
 #include "Document.hpp"
 #include "DocumentBuilder.hpp"
 #include "InvertedIndex.hpp"
 #include "catch2/catch_test_macros.hpp"
-#include "../src/TransactionCore/include/Error.hpp"
-#include "../src/TransactionCore/include/IndexStore.hpp"
 
 TEST_CASE("DocumentBuilder::tokenize works correctly", "[DocumentBuilder]")
 {
@@ -143,7 +143,6 @@ TEST_CASE("InvertedIndex basic functionality", "[InvertedIndex]")
         REQUIRE(index.get_word_count_in_document("apple", 1) == 0);
     }
 }
-
 
 TEST_CASE("ErrorCode to string conversion", "[Error]")
 {
@@ -401,7 +400,7 @@ TEST_CASE("Search after transaction rollback", "[Transaction][Search]")
 
     auto results = store.find_document("fruit");
     REQUIRE(results.has_value());
-    REQUIRE(results.value().size() == 2); // Должно быть 2 документа!
+    REQUIRE(results.value().size() == 2);   // Должно быть 2 документа!
     REQUIRE(results.value().count(1) == 1); // Документ 1 вернулся
     REQUIRE(results.value().count(2) == 1); // Документ 2 никуда не девался
 }
