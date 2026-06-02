@@ -1,5 +1,5 @@
-#include "../src/TransactionCore/include/Error.hpp"
-#include "../src/TransactionCore/include/IndexStore.hpp"
+#include "Error.hpp"
+#include "IndexStore.hpp"
 #include "Document.hpp"
 #include "DocumentBuilder.hpp"
 #include "InvertedIndex.hpp"
